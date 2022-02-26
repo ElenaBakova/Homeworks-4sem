@@ -31,24 +31,16 @@ let listReverse list =
 
     composeList [] list
 
-let rec powerTwo n =
-    let rec inner n acc =
-        match n with
-        | 0 -> acc
-        | _ -> inner (n - 1) (acc <<< 1)
-
-    inner n 1
-
 // Makes list from 2^n to 2^(n+m)
 let makeList n m =
-    let start = powerTwo n
+    let start = pown 2 n
 
     let rec fillList m current list =
         match m with
         | 0 -> list
-        | _ -> fillList (m - 1) (current * 2) (list @ [ current * 2 ])
+        | _ -> fillList (m - 1) (current * 2) (current * 2 :: list)
 
-    fillList m start [ start ]
+    fillList m start [start] |> listReverse 
 
 // Finds element in the list
 let findInList list number =
