@@ -6,8 +6,7 @@ let rec factorial number =
         raise (ArgumentException("Number can't be negative"))
 
     match number with
-    | 0 -> 0
-    | 1 -> 1
+    | 0 | 1 -> 1
     | _ -> number * factorial (number - 1)
 
 // Counts fibonacci number
