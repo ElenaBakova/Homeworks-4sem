@@ -1,17 +1,17 @@
 ﻿module ExpressionTree
 
-type Proposition =
+type Expression =
     | Number of int
-    | Summation of Proposition * Proposition
-    | Subtraction of Proposition * Proposition
-    | Multiplication of Proposition * Proposition
-    | Division of Proposition * Proposition
+    | Summation of Expression * Expression
+    | Subtraction of Expression * Expression
+    | Multiplication of Expression * Expression
+    | Division of Expression * Expression
 
 // Evaluates expression tree
-let rec evaluate (p: Proposition) =
-    match p with
-        | Number n -> n
-        | Summation(p1, p2) -> (evaluate p1) + (evaluate p2)
-        | Subtraction(p1, p2) -> (evaluate p1) - (evaluate p2)
-        | Multiplication(p1, p2) -> (evaluate p1) * (evaluate p2)
-        | Division(p1, p2) -> (evaluate p1) / (evaluate p2)
+let rec evaluate (expression: Expression) =
+    match expression with
+        | Number number -> number
+        | Summation(left, right) -> (evaluate left) + (evaluate right)
+        | Subtraction(left, right) -> (evaluate left) - (evaluate right)
+        | Multiplication(left, right) -> (evaluate left) * (evaluate right)
+        | Division(left, right) -> (evaluate left) / (evaluate right)
