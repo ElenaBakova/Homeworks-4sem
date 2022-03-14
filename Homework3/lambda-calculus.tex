@@ -1,0 +1,25 @@
+\documentclass[14pt, a4paper]{article}
+
+\usepackage[14pt]{extsizes}
+
+\def\next{$\rightarrow_\beta$\newline}
+\def\lb{$\lambda$}
+
+\begin{document}
+
+\begin{enumerate}
+\centering
+    \item ((\lb a.(\lb b.b b) (\lb b.b b)) b) ((\lb c.(c b)) (\lb a.a)) \next
+    ((\lb b.b b) (\lb b.b b)) ((\lb c.(c b)) (\lb a.a)) \next
+    ((\lb b.b b) (\lb b.b b)) ((\lb a.a) b) \next
+    ((\lb b.b b) (\lb b.b b)) b
+
+    \item S K K = (\lb x y z.x z (y z))(\lb x y.x)(\lb x y.x) \next
+    (\lb y z.(\lb x y.x) z (y z))(\lb x y.x) \next
+    (\lb z.(\lb x y.x) z ((\lb x y.x) z)) \next
+    (\lb z.(\lb x y.x) z (\lb y.z)) \next
+    (\lb z.z) = I
+
+\end{enumerate}
+
+\end{document}
