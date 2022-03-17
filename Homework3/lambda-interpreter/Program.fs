@@ -1,20 +1,25 @@
-﻿
+﻿module LambdaInterpreter
+
+// Lambda-term
 type Term =
     |Variable of string
     |Abstraction of string * Term
     |Application of Term * Term
 
+// Finds new name for a variable
 let findNewName (usedVariables: string list) =
     let letters = List.map (fun x -> x.ToString()) [ 'A' .. 'z' ]
     let unused = List.except usedVariables letters
     List.head unused
 
+// Returns list of free variables
 let rec getFreeVariables term = 
     match term with
     | Variable(x) -> [x]
     | Application(term1, term2) -> List.distinct (getFreeVariables term1 @ getFreeVariables term2)
     | Abstraction(variable, term1) -> List.except (Seq.singleton variable) (getFreeVariables term1)
 
+// Substitutes newTerm to the term
 let rec substitution variable term newTerm = 
     match (term, newTerm) with
     | (Application(left, right), _) -> Application(substitution variable left newTerm, substitution variable right newTerm)
@@ -36,9 +41,11 @@ let betaReduction term =
     let rec reduction term=
         match term with
         | Variable(var) -> Variable(var)
-        | Abstraction(variable, term) -> Abstraction(variable, reduction(term))
+        | Application(Abstraction(variable, term2), term) -> substitution variable term2 term
         | Application(term1, term2) ->
-            match term1 with
-            | Abstraction(variable, term3) -> term3// подставить variable into term2
-            | _ -> Application(reduction(term1), reduction(term2))
+            let countedTerm1 = reduction term1
+            match countedTerm1 with
+            | Abstraction(variable, term3) -> reduction(substitution variable term3 term2)
+            | _ -> Application(countedTerm1, reduction(term2))
+        | Abstraction(variable, term) -> Abstraction(variable, reduction(term))
     reduction term
