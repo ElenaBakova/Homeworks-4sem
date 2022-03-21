@@ -5,7 +5,7 @@ type Tree<'a> =
     | Node of 'a * Tree<'a> * Tree<'a>
 
 // Map function for a binary tree
-let rec treeMap (binTree: Tree<'a>) (cont: 'a -> 'a) =
+let rec treeMap (binTree: Tree<'a>) (continuation: 'a -> 'a) =
     match binTree with
         | Empty -> Empty
-        | Node(node, left, right) -> Node(cont node, treeMap left cont, treeMap right cont)
+        | Node(node, left, right) -> Node(continuation node, treeMap left continuation, treeMap right continuation)

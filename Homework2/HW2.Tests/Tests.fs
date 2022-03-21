@@ -27,6 +27,6 @@ let ``Evaluation of expression tree testing`` () =
     
 [<Test>]
 let ``Infinite prime numbers sequence test`` () =
-    let sequence = seqence()
+    let sequence = sequence()
     let expected = [2; 3; 5; 7; 11; 13; 17]
     Seq.take 7 sequence |> should equal expected
