@@ -1,4 +1,6 @@
-﻿let myFunction x l = List.map (fun y -> y * x) l
+﻿module Functions
+
+let myFunction x l = List.map (fun y -> y * x) l
 
 let myFunction2 x = List.map (fun y -> y * x)
 
