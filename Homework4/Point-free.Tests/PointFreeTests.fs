@@ -13,7 +13,6 @@ let ``Check whether myFunction is correct`` () =
 
 [<Test>]
 let ``Point-free and myFunction equality check`` () =
-    let myFunction6 = List.map << (*)
-    let intGenerator = Arb.generate<int>
-    let list = intGenerator |> Gen.sample 1000 100
-    myFunction 5 list |> should equal (myFunction6 5 list)
+    let pointFreeTest = List.map << (*)
+    let check number list = myFunction number list = pointFree number list
+    Check.QuickThrowOnFailure check
