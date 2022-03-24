@@ -1,4 +1,6 @@
-﻿let checkBalance string =
+﻿module BalanceChecking
+
+let checkBalance string =
     let rec isBalanced string round square figure =
         match string with
         | [] -> if (round <> 0 || square <> 0 || figure <> 0) then false else true
@@ -12,5 +14,3 @@
             | '}' -> isBalanced tail round square (figure - 1)
             | _ -> false 
     isBalanced string 0 0 0
-
-printf "%O" (checkBalance (Seq.toList "(((())))"))
