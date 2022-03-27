@@ -13,11 +13,11 @@ let addRecord (newRecord: PhoneNumber) phoneBook =
     newRecord :: phoneBook
 
 // Finds number by name
-let findNumber (phoneBook: PhoneNumber list) name =
+let findNumber phoneBook name =
     List.filter(fun item -> item.Name = name) phoneBook |> List.map (fun item -> item.Number)
 
 // Finds name by number
-let findName (phoneBook: PhoneNumber list) number =
+let findName phoneBook number =
     List.filter(fun item -> item.Number = number) phoneBook |> List.map (fun item -> item.Name)
 
 // Reads record from console
