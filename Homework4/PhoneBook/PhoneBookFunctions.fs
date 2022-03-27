@@ -21,7 +21,7 @@ let findName phoneBook number =
     List.filter(fun item -> item.Number = number) phoneBook |> List.map (fun item -> item.Name)
 
 // Reads record from console
-let readRecord() =
+let readRecord () =
     printfn("Enter name and number")
     let data = Console.ReadLine().Split(' ')
     { Name = data[0]; Number = data[1] }
@@ -47,9 +47,8 @@ let printToFile list path =
 // Reads data from file
 let readFromFile path = 
     try
-        let data = File.ReadAllLines(path)
-        data |> Seq.map (fun string -> 
-                                    let split = string.Split(' ')
-                                    {Name = split[0]; Number = split[1]}) |> Seq.toList
+        File.ReadAllLines(path) |> Seq.map (fun string -> 
+                                        let split = string.Split(' ')
+                                        {Name = split[0]; Number = split[1]}) |> Seq.toList
     with 
     | exeption -> printfn $"{exeption.Message}"; []
