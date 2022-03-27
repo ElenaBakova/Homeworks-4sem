@@ -11,13 +11,34 @@ let firstStart () =
     5 - save data to the file
     6 - read data from file"
 
-(*let rec processing phoneBook = 
+let rec processing (phoneBook: PhoneNumber list) = 
+    printfn "\nCommand code: "
     let code = Console.ReadLine()
-    (match code with
+    match code with
     | "0" -> ()
-    | "1" -> readNameNumber |> AddRecord
-    | "2" -> findNumber |> printRes) |> processing*)
-
+    | "1" -> 
+        let record = readRecord()
+        addRecord record phoneBook |> processing 
+    | "2" -> 
+        let name = readData "name"
+        printfn "Found: "
+        findNumber phoneBook name |> printList
+        processing phoneBook
+    | "3" -> 
+        let number = readData "number"
+        printfn "Found: %A" <| findName phoneBook number
+        processing phoneBook
+    | "4" -> 
+        printList phoneBook
+        processing phoneBook
+    | "5" ->
+        readData "file path" |> printToFile phoneBook
+        processing phoneBook
+    | "6" ->
+        readData "file path" |> readFromFile |> processing
+    | _ -> 
+        printfn "Incorrect command"
+        processing phoneBook
 
 firstStart()
-//processing()
+processing []
