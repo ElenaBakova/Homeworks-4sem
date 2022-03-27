@@ -1,4 +1,4 @@
-module Point_free.Tests
+module PointFree.Tests
 
 open NUnit.Framework
 open Functions
@@ -13,6 +13,12 @@ let ``Check whether myFunction is correct`` () =
 
 [<Test>]
 let ``Point-free and myFunction equality check`` () =
-    let pointFreeTest = List.map << (*)
-    let check number list = myFunction number list = pointFree number list
-    Check.QuickThrowOnFailure check
+    Check.QuickThrowOnFailure(fun number list -> (myFunction number list) = (pointFree number list))
+
+[<Test>]
+let ``Point-free and myFunction2 equality check`` () =
+    Check.QuickThrowOnFailure(fun number list -> (myFunction2 number list) = (pointFree number list))
+
+[<Test>]
+let ``Point-free and myFunction3 equality check`` () =
+    Check.QuickThrowOnFailure(fun number list -> (myFunction3 number list) = (pointFree number list))
