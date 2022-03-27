@@ -1,4 +1,6 @@
-﻿open System
+﻿module PhoneBook
+
+open System
 open PhoneBookFunctions
 
 let firstStart () = 

@@ -41,9 +41,10 @@ let rec printList list =
 
 // Prints data to file
 let printToFile list path =
-    let data = List.map (fun item -> $"{item.Name} --- {item.Number}") list |> List.toArray
+    let data = List.map (fun item -> $"{item.Name} {item.Number}") list |> List.toArray
     File.WriteAllLines(path, data)
 
+// Reads data from file
 let readFromFile path = 
     try
         let data = File.ReadAllLines(path)
