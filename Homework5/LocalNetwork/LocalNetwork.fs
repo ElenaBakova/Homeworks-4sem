@@ -23,9 +23,9 @@ type Computer(operatingSystem: OS, computerID: string, isInfected: Infected) =
         | Linux -> 0.5
         | MacOS -> 0.7
 
-type Network(computers: Computer list, connectionsList) =
-    let rand = Random()
+type Network(computers: Computer list, connectionsList, rand: Random) =
     let computersCount = computers.Length
+    let mutable changedThisStep = false
 
     member val InfectedComputers =
         List.fold
@@ -59,6 +59,7 @@ type Network(computers: Computer list, connectionsList) =
            && computer.IsInfected = Clear then
             computer.IsInfected <- AtThisTurn
             this.InfectedComputers <- this.InfectedComputers + 1
+            changedThisStep <- true
 
     member this.nextStep() =
         List.iter
@@ -78,7 +79,11 @@ type Network(computers: Computer list, connectionsList) =
         | 0 -> printfn "No infected computers"
         | x when x = computersCount -> printfn $"All of {x} computers are infected"
         | x when x > 0 && x < computersCount ->
+            changedThisStep <- false
             printfn $"{this.InfectedComputers} computers are infected"
             this.nextStep ()
-            this.Run()
+            if (not changedThisStep) then
+                printfn ""
+            else
+                this.Run()
         | _ -> printfn ""
