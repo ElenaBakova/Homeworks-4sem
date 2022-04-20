@@ -23,8 +23,9 @@ type Computer(operatingSystem: OS, computerID: string, isInfected: Infected) =
         | Linux -> 0.5
         | MacOS -> 0.7
 
-type Network(computers: Computer list, connectionsList: List<Computer * Computer>) =
+type Network(computers: Computer list, connectionsList) =
     let rand = Random()
+    let computersCount = computers.Length
 
     member val InfectedComputers =
         List.fold
@@ -38,18 +39,22 @@ type Network(computers: Computer list, connectionsList: List<Computer * Computer
 
     member this.willInfect(computer: Computer) =
         computer.InfectionChance > rand.NextDouble()
+        
+    member this.IsClear(pcID: string) =
+        let computer = computers |> List.find (fun pc -> pc.Id = pcID)
+        computer.IsInfected = Clear
 
     member this.infectNeighbours(computer: Computer) =
         connectionsList
-        |> List.iter
-            (fun (first: Computer, second: Computer) ->
-                if first.Id = computer.Id then
-                    this.infectComputer second
+        |> List.iter (fun pair ->
+            if fst(pair) = computer.Id && this.IsClear(snd(pair)) then
+                this.infectComputer (snd pair)
 
-                if second.Id = computer.Id then
-                    this.infectComputer first)
+            if snd(pair) = computer.Id && this.IsClear(fst(pair)) then
+                this.infectComputer (fst pair))
 
-    member this.infectComputer(computer: Computer) =
+    member this.infectComputer(pcID) =
+        let computer = computers |> List.find (fun pc -> pc.Id = pcID)
         if this.willInfect computer
            && computer.IsInfected = Clear then
             computer.IsInfected <- AtThisTurn
@@ -64,7 +69,16 @@ type Network(computers: Computer list, connectionsList: List<Computer * Computer
 
         List.iter
             (fun (pc: Computer) ->
-                if pc.IsInfected = NotClear
-                   && pc.IsInfected <> NotClear then
+                if pc.IsInfected = NotClear then
                     this.infectNeighbours pc)
             computers
+
+    member this.Run() =
+        match this.InfectedComputers with
+        | 0 -> printfn "No infected computers"
+        | x when x = computersCount -> printfn $"All of {x} computers are infected"
+        | x when x > 0 && x < computersCount ->
+            printfn $"{this.InfectedComputers} computers are infected"
+            this.nextStep ()
+            this.Run()
+        | _ -> printfn ""
