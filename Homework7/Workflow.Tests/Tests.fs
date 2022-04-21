@@ -3,39 +3,43 @@
 open NUnit.Framework
 open Builders
 
-[<TestCase(2, 0.05)>]
-[<TestCase(3, 0.048)>]
-[<TestCase(4, 0.0476)>]
-let CounterBuilderTest (digits: int, expected) =
-    let rounding x = new CounterBuilder(x)
-    let result = rounding digits {
+[<Test>]
+let RoundBuilderTest () =
+    let rounding x = new RounderBuilder(x)
+    let result = rounding 3 {
         let! a = 2.0 / 12.0
         let! b = 3.5
         return a / b
     }
-    Assert.AreEqual(expected, result)
+    Assert.AreEqual(0.048, result)
 
-[<TestCase("1", "2", 3)>]
-[<TestCase("15", "2", 17)>]
-[<TestCase("-1", "5", 4)>]
-let StringCounterBuilderTest (a: string, b: string, expected) =
-    let calculate = new StringCounterBuilder()
+[<Test>]
+let RoundBuilderTest2 () =
+    let rounding x = new RounderBuilder(x)
+    Assert.Throws<System.ArgumentOutOfRangeException>(fun () ->
+        rounding -3 {
+            let! a = 2.0 / 12.0
+            let! b = 3.5
+            return a / b
+        } |> ignore) |> ignore
+
+[<Test>]
+let StringCalculatorBuilderTest () =
+    let calculate = new StringCalculatorBuilder()
     let result = calculate {
-        let! x = a
-        let! y = b
+        let! x = "1"
+        let! y = "2"
         let z = x + y
-        return z
+        return "3"
     }
-    Assert.AreEqual(expected |> Some, result)
+    Assert.AreEqual(Some("3"), result)
     
-[<TestCase("1", "X")>]
-[<TestCase("1Y", "2")>]
-[<TestCase("-1", "5.")>]
-let StringCounterBuilderTest2 (a: string, b: string) =
-    let calculate = new StringCounterBuilder()
+[<Test>]
+let StringCalculatorBuilderTest2 () =
+    let calculate = new StringCalculatorBuilder()
     let result = calculate {
-        let! x = a
-        let! y = b
+        let! x = "1"
+        let! y = "X"
         let z = x + y
         return z
     }
