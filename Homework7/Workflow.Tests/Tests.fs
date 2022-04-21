@@ -30,9 +30,9 @@ let StringCalculatorBuilderTest () =
         let! x = "1"
         let! y = "2"
         let z = x + y
-        return "3"
+        return z
     }
-    Assert.AreEqual(Some("3"), result)
+    Assert.AreEqual(Some(3), result)
     
 [<Test>]
 let StringCalculatorBuilderTest2 () =
