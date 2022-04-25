@@ -9,8 +9,7 @@ let getList (binTree: Tree<'a>) condition =
         match binTree with
             | Empty -> acc
             | Node(node, left, right) ->
-                if (condition(node)) then
-                    node :: acc @ (parseTree left condition acc)  @ (parseTree right condition acc)
-                else
-                    acc @ (parseTree left condition acc)  @ (parseTree right condition acc)
+                let acc = if condition(node) then node :: acc else acc
+                let leftAcc = parseTree left condition acc
+                parseTree right condition leftAcc
     parseTree binTree condition []
