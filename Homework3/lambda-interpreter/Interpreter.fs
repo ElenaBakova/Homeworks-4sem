@@ -1,5 +1,7 @@
 ﻿module LambdaInterpreter
 
+let letters = List.map (fun x -> x.ToString()) [ 'A' .. 'z' ]
+
 // Lambda-term
 type Term =
     |Variable of string
@@ -8,7 +10,6 @@ type Term =
 
 // Finds new name for a variable
 let findNewName (usedVariables: string list) =
-    let letters = List.map (fun x -> x.ToString()) [ 'A' .. 'z' ]
     let unused = List.except usedVariables letters
     List.head unused
 
