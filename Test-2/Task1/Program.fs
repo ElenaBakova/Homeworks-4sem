@@ -17,6 +17,8 @@ let rec makeLine n index acc =
 
 // Makes square
 let rec makeSquare n index acc = 
+    if n < 1 then 
+        raise (ArgumentException("Square size can't be less than 1"))
     match index with 
     | 0 -> (acc + makeLine n 0 (makeWholeLine n 0 "")) |> makeSquare n (index + 1)
     | x when x = n - 2 -> acc + (makeWholeLine n 0 "")
