@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="SquareMaking.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
