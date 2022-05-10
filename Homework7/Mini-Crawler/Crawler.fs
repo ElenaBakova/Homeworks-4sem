@@ -5,8 +5,7 @@ open System.Text.RegularExpressions
 
 // Fetches links from given string
 let fetchLinks (html: string) =
-    let pattern =
-        "<a href=\"(https?:\/\/\S+\W*)\"[^>]*>"
+    let pattern = "<a href=\"(https?:\/\/\S+\W*)\"[^>]*>"
 
     let matches = Regex.Matches(html, pattern)
 
@@ -22,10 +21,9 @@ let downloadPage (url: string) (client: HttpClient) =
 
 let getSizes (url: string) (client: HttpClient) =
     downloadPage url client
-    |> fun x ->
-        match x with
-        | Choice1Of2 result -> result.Length
-        | Choice2Of2 (ex: exn) -> failwith ex.Message
+    |> (function
+    | Choice1Of2 result -> result.Length
+    | Choice2Of2 (ex: exn) -> failwith ex.Message)
 
 // Returns information about size of pages placed in the given page
 let getInfo (url: string) =
@@ -34,10 +32,10 @@ let getInfo (url: string) =
 
         let html =
             downloadPage url client
-            |> fun x ->
-                match x with
-                | Choice1Of2 result -> result
-                | Choice2Of2 (ex: exn) -> failwith ex.Message
+            |> (function
+            | Choice1Of2 result -> result
+            | Choice2Of2 (ex: exn) -> failwith ex.Message)
+
 
         let links = fetchLinks html
 
