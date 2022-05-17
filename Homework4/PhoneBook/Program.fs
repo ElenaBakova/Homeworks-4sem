@@ -28,7 +28,7 @@ let rec processing (phoneBook: PhoneNumber list) =
         processing phoneBook
     | "3" -> 
         let number = readData "number"
-        printfn "Found: %A" <| findName phoneBook number
+        printfn $"Found: {findName phoneBook number}"
         processing phoneBook
     | "4" -> 
         printList phoneBook
