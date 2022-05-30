@@ -1,7 +1,5 @@
 ﻿module LocalNetwork
 
-open System
-
 type OS =
     | Windows
     | MacOS
@@ -10,12 +8,19 @@ type OS =
 type Infected =
     | Clear
     | AtThisTurn
-    | NotClear
+    | Infected
 
 type Computer(operatingSystem: OS, computerID: string, isInfected: Infected) =
     member _.Os = operatingSystem
     member _.Id = computerID
     member val IsInfected = isInfected with get, set
+
+    override x.Equals other =
+        match other with
+        | :? Computer as y -> (y.Id = x.Id && y.IsInfected = x.IsInfected && y.Os = x.Os)
+        | _ -> false
+
+    override x.GetHashCode () = x.GetHashCode()
 
     member val InfectionChance =
         match operatingSystem with
@@ -23,7 +28,7 @@ type Computer(operatingSystem: OS, computerID: string, isInfected: Infected) =
         | Linux -> 0.5
         | MacOS -> 0.7
 
-type Network(computers: Computer list, connectionsList, rand: Random) =
+type Network(computers: Computer list, connectionsList, infectingCondition: (unit -> double)) =
     let computersCount = computers.Length
     let mutable changedThisStep = false
 
@@ -37,21 +42,24 @@ type Network(computers: Computer list, connectionsList, rand: Random) =
             0
             computers with get, set
 
-    member this.willInfect(computer: Computer) =
-        computer.InfectionChance > rand.NextDouble()
+    member this.getComputers
+        with get () = computers
+
+    member _.willInfect(computer: Computer) =
+        computer.InfectionChance > infectingCondition()
         
-    member this.IsClear(pcID: string) =
+    member _.IsClear(pcID: string) =
         let computer = computers |> List.find (fun pc -> pc.Id = pcID)
         computer.IsInfected = Clear
 
     member this.infectNeighbours(computer: Computer) =
         connectionsList
-        |> List.iter (fun pair ->
-            if fst(pair) = computer.Id && this.IsClear(snd(pair)) then
-                this.infectComputer (snd pair)
+        |> List.iter (fun (firstPC, secondPC) ->
+            if firstPC = computer.Id && this.IsClear(secondPC) then
+                this.infectComputer (secondPC)
 
-            if snd(pair) = computer.Id && this.IsClear(fst(pair)) then
-                this.infectComputer (fst pair))
+            if secondPC = computer.Id && this.IsClear(firstPC) then
+                this.infectComputer (firstPC))
 
     member this.infectComputer(pcID) =
         let computer = computers |> List.find (fun pc -> pc.Id = pcID)
@@ -65,12 +73,12 @@ type Network(computers: Computer list, connectionsList, rand: Random) =
         List.iter
             (fun (pc: Computer) ->
                 if pc.IsInfected = AtThisTurn then
-                    pc.IsInfected <- NotClear)
+                    pc.IsInfected <- Infected)
             computers
 
         List.iter
             (fun (pc: Computer) ->
-                if pc.IsInfected = NotClear then
+                if pc.IsInfected = Infected then
                     this.infectNeighbours pc)
             computers
 
