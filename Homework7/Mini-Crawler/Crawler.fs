@@ -7,8 +7,9 @@ open System.Text.RegularExpressions
 let fetchLinks (html: string) =
     let pattern = "<a href=\"(https?:\/\/\S+\W*)\"[^>]*>"
 
-    let matches = Regex.Matches(html, pattern)
-
+    let regex = new Regex(pattern, RegexOptions.Compiled)
+    let matches = regex.Matches(html)
+ 
     matches
     |> Seq.map (fun item -> item.Groups[1].Value)
 
@@ -36,15 +37,15 @@ let getInfo (url: string) =
             | Choice1Of2 result -> Some result
             | Choice2Of2 (_: exn) -> None
 
+        if (html = None) then
+            return Seq.empty
+        else 
+            let links = fetchLinks html.Value
 
-        let links = fetchLinks html.Value
+            let! pages =
+                links
+                |> Seq.map (fun link -> downloadPage link client)
+                |> Async.Parallel
 
-        let sizes =
-            links
-            |> Seq.map (fun link -> downloadPage link client)
-            |> Async.Parallel
-            |> Async.RunSynchronously
-            |> getSizes
-
-        return Seq.zip links sizes
+            return getSizes pages |> Seq.zip links
     }
