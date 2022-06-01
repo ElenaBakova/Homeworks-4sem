@@ -20,7 +20,7 @@ type Computer(operatingSystem: OS, computerID: string, isInfected: Infected) =
         | :? Computer as y -> (y.Id = x.Id && y.IsInfected = x.IsInfected && y.Os = x.Os)
         | _ -> false
 
-    override x.GetHashCode () = x.GetHashCode()
+    override _.GetHashCode () = computerID.GetHashCode()
 
     member val InfectionChance =
         match operatingSystem with
